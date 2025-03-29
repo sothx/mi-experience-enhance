@@ -1,0 +1,6 @@
+{
+    "product_name": ["vermeer"],
+    "zram_size": {
+        "12":12288, "16":16384
+    }
+}
