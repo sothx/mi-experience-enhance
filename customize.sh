@@ -134,7 +134,7 @@ if [[ "$is_need_patch_zram" == 1 && "$API" -ge 35 ]]; then
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已启用 ZRAM:RAM=1:1 内存优化"
-    ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
+    ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G(部分新机型为24G)"
     ui_print "- [重要提醒]可能会与其他内存相关模块冲突导致不生效"
     if [[ "$has_been_patch_perfinit_bdsize_zram" == 0 ]]; then
       has_been_patch_perfinit_bdsize_zram=1
