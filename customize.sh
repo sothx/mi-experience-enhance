@@ -42,7 +42,7 @@ has_been_patch_perfinit_bdsize_zram=0
 
 
 # ZRAM:RAM 1:1内存优化
-need_patch_zram_phone_list="rubens marble duchamp manet rothko vermeer matisse xaga ingres diting alioth ares corot haydn mondrian rembrandt socrates"
+need_patch_zram_phone_list="rubens marble duchamp manet rothko vermeer matisse xaga ingres diting alioth ares corot haydn mondrian rembrandt socrates agate cas cmi lisa pissarro_in star thyme umi venus vili"
 is_need_patch_zram=$(check_device_is_need_patch "$device_code" "$need_patch_zram_phone_list")
 
 # 基础函数
@@ -408,7 +408,7 @@ if [[ "$API" -ge 35 ]]; then
 fi
 
 # 支持高级材质
-if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
+if [[ "$API" -ge 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否开启高级材质"
   ui_print "  音量+ ：是"
@@ -434,6 +434,7 @@ if [[  "$API" -ge 34 ]]; then
   ui_print "- 是否启用通信共享？(仅在默认主题下生效)"
   ui_print "- [重要提醒]是否生效以实际系统底层支持情况为准"
   ui_print "- [重要提醒]如果无效请授予[系统界面]和[系统桌面]的ROOT权限"
+  ui_print "- [重要提醒]如果仍然无效请尝试其他强开通信共享的模块~"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -442,6 +443,7 @@ if [[  "$API" -ge 34 ]]; then
     ui_print "- 已启用通信共享，仅在默认主题下生效"
     ui_print "- [重要提醒]是否生效以实际系统底层支持情况为准"
     ui_print "- [重要提醒]如果无效请授予[系统界面]和[系统桌面]的ROOT权限"
+    ui_print "- [重要提醒]如果仍然无效请尝试其他强开通信共享的模块~"
     patch_celluar_shared $MODPATH
   else
     ui_print "- 你选择不启用通信共享"
