@@ -138,6 +138,26 @@ patch_celluar_shared() {
   cp -rf "$1"/common/celluar_shared/* "$1"/system/product/media/theme/default/
 }
 
+patch_disabled_ota_validate() {
+  DEVICE_CODE="$(getprop ro.product.device)"
+  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
+  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
+  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    # 去除ota校验
+    sed -i 's/<bool name="support_ota_validate">true<\/bool>/<bool name="support_ota_validate">false<\/bool>/g' $MODULE_DEVICE_FEATURES_PATH
+  fi
+}
+
+patch_hdr_support() {
+  DEVICE_CODE="$(getprop ro.product.device)"
+  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
+  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
+  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    # 开启HDR增强
+    sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"support_hdr_enhance\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
+  fi
+}
+
 
 patch_perfinit_bdsize_zram() {
   DEVICE_CODE="$(getprop ro.product.device)"

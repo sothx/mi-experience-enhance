@@ -327,19 +327,29 @@ if [[ "$API" -ge 33 ]]; then
 fi
 
 # 启用Ultra HDR
-if [[ "$API" -ge 35 ]]; then
+if [[  "$API" -ge 35 ]]; then
   ui_print "*********************************************"
-  ui_print "- 是否开启Ultra HDR"
+  ui_print "- 是否开启 HDR 支持？"
+  ui_print "- [重要提醒]不支持小米相册的HDR"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
+
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已开启Ultra HDR"
-    add_props "# 开启Ultra HDR"
+    ui_print "- 已开启 HDR 支持"
+    ui_print "- [重要提醒]不支持小米相册的HDR"
+    add_props "# 开启 Ultra HDR"
     add_props "persist.sys.support_ultra_hdr=true"
+    if [[ "$has_been_patch_device_features" == 0 ]]; then
+      has_been_patch_device_features=1
+      patch_device_features $MODPATH
+      add_post_fs_data 'patch_device_features $MODDIR'
+    fi
+    patch_hdr_support $MODPATH
+    add_post_fs_data 'patch_hdr_support $MODDIR'
   else
-    ui_print "- 你选择不开启Ultra HDR"
+    ui_print "- 你选择不开启 HDR 支持"
   fi
 fi
 
@@ -396,6 +406,27 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   add_props "persist.sys.support_window_smoothcorner=true"
 else
   ui_print "- 你选择不开启平滑圆角"
+fi
+
+# 应用启动延迟优化
+if [[ "$API" -ge 35 ]]; then
+  # 应用启动延迟优化
+  ui_print "*********************************************"
+  ui_print "- 是否启用旗舰机应用启动延迟优化？"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 启用应用启动延迟优化"
+    ui_print "- (旗舰机型是否启用无明显区别，对中低端机型效果明显)"
+    ui_print "- (部分机型处于系统桌面黑名单限制，需搭配修改版系统桌面)"
+    add_props "persist.sys.hyper_transition_v=2"
+    add_props "persist.sys.hyper_transition=true"
+    add_props "ro.miui.shell_anim_enable_fcb=2"
+  else
+    ui_print "- 你选择不启用应用启动延迟优化"
+  fi
 fi
 
 # 支持全屏AOD
