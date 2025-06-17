@@ -42,7 +42,7 @@ has_been_patch_perfinit_bdsize_zram=0
 
 
 # ZRAM:RAM 1:1内存优化
-need_patch_zram_phone_list="rubens marble duchamp manet rothko vermeer matisse xaga ingres diting alioth ares corot haydn mondrian rembrandt socrates agate cas cmi lisa pissarro_in star thyme umi venus vili"
+need_patch_zram_phone_list="rubens marble duchamp manet rothko vermeer matisse xaga ingres diting alioth ares corot haydn mondrian rembrandt socrates agate cas cmi lisa pissarro_in star thyme umi venus vili cannon cannong curtana excalibur gauguin joyeuse lime merlin tucana"
 is_need_patch_zram=$(check_device_is_need_patch "$device_code" "$need_patch_zram_phone_list")
 
 # 基础函数
@@ -323,6 +323,23 @@ if [[ "$API" -ge 33 ]]; then
     add_props "debug.game.video.speed=true"
   else
     ui_print "- 你选择不开启进游戏三倍速"
+  fi
+fi
+
+# 启用Ultra HDR
+if [[ "$API" -ge 35 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否开启Ultra HDR"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已开启Ultra HDR"
+    add_props "# 开启Ultra HDR"
+    add_props "persist.sys.support_ultra_hdr=true"
+  else
+    ui_print "- 你选择不开启Ultra HDR"
   fi
 fi
 
