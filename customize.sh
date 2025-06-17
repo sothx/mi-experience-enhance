@@ -42,7 +42,7 @@ has_been_patch_perfinit_bdsize_zram=0
 
 
 # ZRAM:RAM 1:1内存优化
-need_patch_zram_phone_list="rubens marble duchamp manet rothko vermeer matisse xaga ingres diting alioth ares corot haydn mondrian rembrandt socrates agate cas cmi lisa pissarro_in star thyme umi venus vili cannon cannong curtana excalibur gauguin joyeuse lime merlin tucana"
+need_patch_zram_phone_list="rubens marble duchamp manet rothko vermeer matisse xaga ingres diting alioth ares corot haydn mondrian rembrandt socrates agate cas cmi lisa pissarro_in star thyme umi venus vili cannon cannong curtana excalibur gauguin joyeuse lime merlin tucana evergo fleur light lightcm opal pissarro spes spesn veux vida viva"
 is_need_patch_zram=$(check_device_is_need_patch "$device_code" "$need_patch_zram_phone_list")
 
 # 基础函数
