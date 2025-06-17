@@ -30,6 +30,7 @@ set_perm_recursive "$MODPATH" 0 0 0755 0777 u:object_r:system_file:s0
 
 # 重置缓存
 rm -rf /data/system/package_cache/*
+rm -rf /data/resource-cache
 
 # 环境配置
 touch "$MODPATH"/system.prop
@@ -83,9 +84,24 @@ key_check() {
 
 if [[ -d "$magisk_path$module_id" ]]; then
   ui_print "*********************************************"
-  ui_print "模块不支持覆盖更新，请卸载模块并重启手机后再尝试安装！"
-  abort "*********************************************"
+  ui_print "模块不支持覆盖更新，请卸载模块并重启平板后再尝试安装！"
+  ui_print "强行覆盖更新会导致模块数据异常，可能导致系统出现不可预料的异常问题！"
+  ui_print "(APatch可能首次安装也会出现覆盖更新的提醒，这种情况下可以选择忽略)"
+  ui_print "  音量+ ：哼，我偏要装(强制安装)"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "*********************************************"
+    ui_print "- 你选择了强制安装！！！"
+    ui_print "*********************************************"
+  else
+    ui_print "*********************************************"
+    ui_print "- 请卸载模块并重启手机后再尝试安装QwQ！！！"
+    abort "*********************************************"
+  fi
 fi
+
 # 骁龙8+Gen1机型判断
 if [[ "$device_soc_model" == "SM8475" && "$device_soc_name" == "cape" && "$API" -ge 33 ]]; then
   # 调整I/O调度
