@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148,SC2034,SC1091,SC2086,SC2059,SC2016
 SKIPUNZIP=0
 . "$MODPATH"/util_functions.sh
 api_level_arch_detect
