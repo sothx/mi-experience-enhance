@@ -13,6 +13,26 @@ if [[ "$KSU" == "true" ]]; then
     ui_print "! 请安装 KernelSU 管理器 v0.6.2 或更高版本"
     abort "*********************************************"
   fi
+  if [ "$KSU_VER_CODE" -gt 30000 ]; then
+    ui_print "- KernelSU 版本号高于 30000，检查元模块状态"
+    if [ -f "/data/adb/metamodule/module.prop" ]; then
+      # 元模块存在，检查是否被禁用
+      if [ -f "/data/adb/metamodule/disable" ]; then
+        ui_print "*********************************************"
+        ui_print "- 元模块已被禁用，请启用元模块后再尝试安装~"
+        abort "*********************************************"
+      fi
+      # 元模块存在且未禁用，正常继续安装流程（不执行abort）
+      ui_print "*********************************************"
+      ui_print "- 已检测到元模块且状态正常，进入模块安装流程~"
+      ui_print "*********************************************"
+    else
+      # 元模块不存在，终止安装并提示
+      ui_print "*********************************************"
+      ui_print "- 您未安装元模块，KernelSU 系管理器必须安装元模块才能正常使用~"
+      abort "*********************************************"
+    fi
+  fi
 elif [[ "$APATCH" == "true" ]]; then
   ui_print "- APatch 版本名: $APATCH_VER"
   ui_print "- APatch 版本号: $APATCH_VER_CODE"
@@ -41,7 +61,6 @@ device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 
 has_been_patch_device_features=0
 has_been_patch_perfinit_bdsize_zram=0
-
 
 # ZRAM:RAM 1:1内存优化
 need_patch_zram_phone_list="rubens marble duchamp manet rothko vermeer matisse xaga ingres diting alioth ares corot haydn mondrian rembrandt socrates agate cas cmi lisa pissarro_in star thyme umi venus vili cannon cannong curtana excalibur gauguin joyeuse lime merlin tucana evergo fleur light lightcm opal pissarro spes spesn veux vida viva"
@@ -344,7 +363,7 @@ if [[ "$API" -ge 33 ]]; then
 fi
 
 # 启用Ultra HDR
-if [[  "$API" -ge 35 ]]; then
+if [[ "$API" -ge 35 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否开启 HDR 支持？"
   ui_print "- [重要提醒]不支持小米相册的HDR"
@@ -494,7 +513,7 @@ if [[ "$API" -ge 34 ]]; then
   fi
 fi
 
-if [[  "$API" -ge 34 ]]; then
+if [[ "$API" -ge 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否启用通信共享？(仅在默认主题下生效)"
   ui_print "- [重要提醒]是否生效以实际系统底层支持情况为准"
