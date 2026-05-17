@@ -56,7 +56,7 @@ update_system_prop() {
     sed -i "s/^$prop=.*/$prop=$value/" "$file"
   else
     # 如果没有找到匹配行，追加新行
-    printf "$prop=$value\n" >> "$file"
+    printf "$prop=$value\n" >>"$file"
   fi
 }
 
@@ -68,32 +68,32 @@ remove_system_prop() {
 
 # 获取设备类型
 check_device_type() {
-    local redmi_pad_list=$1
-    local device_code=$2
-    local result="xiaomi"
-    for i in $redmi_pad_list; do
-        if [[ "$device_code" == "$i" ]]; then
-            result=redmi
-            break
-        fi
-    done
-    echo $result
+  local redmi_pad_list=$1
+  local device_code=$2
+  local result="xiaomi"
+  for i in $redmi_pad_list; do
+    if [[ "$device_code" == "$i" ]]; then
+      result=redmi
+      break
+    fi
+  done
+  echo $result
 }
 
 # 根据机型列表判断是否需要补全对应机型的功能
 check_device_is_need_patch() {
-    local device_code=$1
-    local pad_list=$2
-    local result=0
+  local device_code=$1
+  local pad_list=$2
+  local result=0
 
-    for i in $pad_list; do
-        if [[ "$device_code" == "$i" ]]; then
-            result=1
-            break
-        fi
-    done
+  for i in $pad_list; do
+    if [[ "$device_code" == "$i" ]]; then
+      result=1
+      break
+    fi
+  done
 
-    echo $result
+  echo $result
 }
 
 patch_device_features() {
@@ -125,6 +125,9 @@ patch_eyecare_mode() {
   if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
     # 节律护眼
     sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <integer name=\"default_eyecare_mode\">2</integer>" $MODULE_DEVICE_FEATURES_PATH
+    if [[ "$API" -ge 36 ]]; then
+      sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"is_rhythmic_mode_v2_supported\">true</<bool>" $MODULE_DEVICE_FEATURES_PATH
+    fi
   fi
 }
 
@@ -158,7 +161,6 @@ patch_hdr_support() {
   fi
 }
 
-
 patch_perfinit_bdsize_zram() {
   DEVICE_CODE="$(getprop ro.product.device)"
   SYSTEM_PERFINIT_BDSIZE_ZRAM_PATH=/system/system_ext/etc/perfinit_bdsize_zram.conf
@@ -177,10 +179,10 @@ patch_perfinit_bdsize_zram() {
 }
 
 patch_zram_config() {
-    MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
-    DEVICE_CODE="$(getprop ro.product.device)"
-    MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
-    $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE > temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
+  MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
+  DEVICE_CODE="$(getprop ro.product.device)"
+  MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
+  $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE >temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
 }
 
 patch_cn_google_services() {
